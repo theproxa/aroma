@@ -1,4 +1,11 @@
-from shop import db
+from shop import db,login_manager
+from flask_login import UserMixin
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 class Product (db.Model):
     __tedlename__= 'products'
@@ -12,3 +19,13 @@ class Product (db.Model):
 
     def __repr__(self) -> str:
         return self.title
+
+class User (db.Model,UserMixin):
+    __tedlename__= 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String,nullable=False , unique= True)
+    password = db.Column(db.String,nullable=False , unique= True)
+    isAdmin = db.Column(db.Boolean,default=False)
+
+    def __repr__(self) -> str:
+        return self.email
