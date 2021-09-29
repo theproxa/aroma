@@ -51,10 +51,12 @@ def product_deteil(product_id):
 @app.route('/register', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
-        u= User( email =request.form.filter_by(emeil).first(), password =request.form.filter_by(password).first(), isAdmin=False)
+        u= User( email =request.form.get('email'), password =request.form.get('password'), isAdmin=False)
         print(u)
         db.session.add(u)
         db.session.commit()
+        login_user( u )
+        return redirect(url_for('index'))
     return render_template('register.html')
 
 
