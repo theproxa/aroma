@@ -48,4 +48,19 @@ def product_deteil(product_id):
     product =Product.query.get(product_id)
     return render_template('product_deteil.html', product=product)
 
+@app.route('/register', methods=['GET','POST'])
+def register():
+    if request.method == 'POST':
+        u= User( email =request.form.filter_by(emeil).first(), password =request.form.filter_by(password).first(), isAdmin=False)
+        print(u)
+        db.session.add(u)
+        db.session.commit()
+    return render_template('register.html')
+
+
+
+@app.route('/errorRegister')
+def errorRegister():  
+    return render_template('errorRegister.html')
+
 
