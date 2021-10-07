@@ -1,9 +1,12 @@
 from werkzeug.utils import secure_filename
 from shop import app
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,redirect,url_for,flash
 from shop.models import Product,db,User
 from PIL import Image
 from flask_login import login_user, logout_user, current_user
+from shop.forms import RegistretionForm
+
+
 @app.route('/')
 def index():
     products = Product.query.all()
@@ -50,14 +53,18 @@ def product_deteil(product_id):
 
 @app.route('/register', methods=['GET','POST'])
 def register():
-    if request.method == 'POST':
-        u= User( email =request.form.get('email'), password =request.form.get('password'), isAdmin=False)
-        print(u)
-        db.session.add(u)
-        db.session.commit()
-        login_user( u )
+    if current_user.is_authenticated:
         return redirect(url_for('index'))
-    return render_template('register.html')
+    form = RegistretionForm()
+    if form.validate_on_submit():
+        
+        user = User(email=form.email.data,password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('registration successful', 'succes')
+        login_user( user )
+        return redirect(url_for('index'))   
+    return render_template('register.html' , form=form)
 
 
 
