@@ -11,7 +11,6 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 
 app.config.from_object(Config)
-
 migrate = Migrate(app,db)
 login_manager = LoginManager(app)
 login_manager.logim_view = 'login'

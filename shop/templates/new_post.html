@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="col-lg-6">
+    <div class="login_form_inner register_form_inner">
+        <h3>New Post</h3>
+        <form class="row login_form" action="" id="contactForm" method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="col-md-12 form-group">
+                {% if form.title.errors %}
+                {{ form.title(class="form-control form-control-lg is-invalid",placeholder='Заголовок') }}
+                <div class="invalid-feedback">
+                    {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.title(class="form-control form-control-lg",placeholder="title") }}
+                {% endif %}
+
+            </div>
+            <div class="col-md-12 form-group">
+                {% if form.title.errors %}
+                {{ form.content(class="form-control form-control-lg is-invalid",placeholder='content') }}
+                <div class="invalid-feedback">
+                    {% for error in form.content.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.content(class="form-control form-control-lg",placeholder="content") }}
+                {% endif %}
+
+            </div>
+            <div class="col-md-12 form-group">
+                {{ form.image.label(class="form-control-label") }}
+                {% if form.image.errors %}
+                {{ form.image(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.email.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.image(class="form-control form-control-lg",placeholder="image") }}
+                {% endif %}
+            </div>
+            {{form.submit (class="button button-register w-100",value="add post" )}}
+        </form>
+    </div>
+</div>
+</div>
+</div>
+</section>
+<!--================End Login Box Area =================-->
+
+{%endblock%}

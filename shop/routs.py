@@ -1,10 +1,10 @@
 from werkzeug.utils import secure_filename
 from shop import app
 from flask import render_template,request,redirect,url_for,flash
-from shop.models import Product,db,User
+from shop.models import *
 from PIL import Image
-from flask_login import login_user, logout_user, current_user
-from shop.forms import RegistretionForm
+from flask_login import login_user, logout_user, current_user,login_required
+from shop.forms import *
 
 
 @app.route('/')
@@ -14,7 +14,11 @@ def index():
 
 @app.route('/blog')
 def blog ():
-    return render_template('blog.html')
+    page = request.args.get('page',1,type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,per_page=2)
+    return render_template('blog.html',posts=posts)
+
+
 
 @app.route('/add product' ,methods=['GET','POST'])
 def add_product ():
@@ -66,10 +70,26 @@ def register():
         return redirect(url_for('index'))   
     return render_template('register.html' , form=form)
 
+@app.route('/post/<int:post_id>')
+def single_blog(post_id):  
+    post = Post.query.get(post_id)
+    return render_template('single_blog.html', post=post)
 
-
-@app.route('/errorRegister')
-def errorRegister():  
-    return render_template('errorRegister.html')
-
+@app.route('/new_post',methods=['GET','POST'])
+@login_required
+def new_post():  
+    form = PostForm()
+    if form.validate_on_submit(): 
+        image = request.files.get('image')
+        if image:
+            file_name = image.filename
+            image = Image.open(image)
+            image.save('shop/static/img/blog/'+file_name)
+            post = Post(title=form.title.data,author=current_user,image=file_name,content=form.content.data)
+            db.session.add(post)
+            db.session.commit()
+            flash('пост был создан','succes')
+            return redirect(url_for('blog'))
+    return render_template('new_post.html', form=form)
+        
 
