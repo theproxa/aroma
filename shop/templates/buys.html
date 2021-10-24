@@ -1,0 +1,15 @@
+{% extends 'base.html'%}
+{% block content %}
+{% for buy in buys %}
+{{buy.name}}
+{{buy.email}}
+{{buy.adres}}
+{{buy.product}}
+{% if current_user.isAdmin %}
+
+<a class="button primary-btn" href="{{url_for('delete_buy',buy_id=buy.id)}}">delete</a>
+
+{% endif %}
+<br>
+{% endfor %}
+{% endblock %}

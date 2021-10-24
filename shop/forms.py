@@ -23,3 +23,4 @@ class PostForm(FlaskForm):
     content = TextAreaField('content',validators=[DataRequired('это поле обязательно для заполнения')])
     image = FileField('image',validators=[FileAllowed(['jpg','png'])])
     submit = SubmitField('submit')
+

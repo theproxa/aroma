@@ -2,64 +2,72 @@
 {% block content %}
 
 
-  <!-- ================ start banner area ================= -->	
-  <section class="blog-banner-area" id="blog">
+<!-- ================ start banner area ================= -->
+<section class="blog-banner-area" id="blog">
     <div class="container h-100">
-      <div class="blog-banner">
-        <div class="text-center">
-          <h1>Our Blog</h1>
-          <nav aria-label="breadcrumb" class="banner-breadcrumb">
-            <ol class="breadcrumb">
-            </ol>
-          </nav>
+        <div class="blog-banner">
+            <div class="text-center">
+                <h1>Our Blog</h1>
+                <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                    <ol class="breadcrumb">
+                    </ol>
+                </nav>
+            </div>
         </div>
-      </div>
     </div>
-  </section>
-  <!-- ================ end banner area ================= -->
+</section>
+<!-- ================ end banner area ================= -->
 
-  <!--================Blog Area =================-->
-  <section class="blog_area">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-8">
-                  <div class="blog_left_sidebar">
-                      {% for post in posts.items  %}
-                      <article class="row blog_item">
-                          <div class="col-md-3">
-                              <div class="blog_info text-right">
-                                  <ul class="blog_meta list">
-                                      <li>
-                                          <a href="#">{{ post.author }}
-                                              <i class="lnr lnr-user"></i>
-                                          </a>
-                                      </li>
-                                      <li>
-                                          <a href="#">{{ post.date_posted }}
-                                              <i class="lnr lnr-calendar-full"></i>
-                                          </a>
-                                      </li>
-                                  </ul>
-                              </div>
-                          </div>
-                          <div class="col-md-9">
-                              <div class="blog_post">
-                                  <img src="{{url_for('static',filename='img/blog/'+ post.image)}}" alt="">
-                                  <div class="blog_details">
-                                      <a href="single-blog.html">
-                                          <h2>{{ post.title }}</h2>
-                                      </a>
-                                      <p>{{ post.content [:300]}} ...</p>
-                                      <a class="button button-blog" href="{{url_for('single_blog',post_id=post.id)}}">View More</a>
-                                  </div>
-                              </div>
-                          </div>
-                      </article>
-                      {% endfor %}
-                            
-                      <nav class="blog-pagination justify-content-center d-flex">
-                          <ul class="pagination">
-                            {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+<!--================Blog Area =================-->
+<section class="blog_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="blog_left_sidebar">
+                    {% for post in posts.items %}
+                    <article class="row blog_item">
+                        <div class="col-md-3">
+                            <div class="blog_info text-right">
+                                <ul class="blog_meta list">
+                                    <li>
+                                        <a href="#">{{ post.author }}
+                                            <i class="lnr lnr-user"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">{{ post.date_posted }}
+                                            <i class="lnr lnr-calendar-full"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="blog_post">
+                                <img src="{{url_for('static',filename='img/blog/'+ post.image)}}" alt="">
+                                <div class="blog_details">
+                                    <a href="single-blog.html">
+                                        <h2>{{ post.title }}</h2>
+                                    </a>
+                                    <p>{{ post.content [:300]}} ...</p>
+                                    <a class="button button-blog" href="{{url_for('single_blog',post_id=post.id)}}">View
+                                        More</a>
+                                    {% if current_user.isAdmin %}
+
+                                    <a class="button primary-btn"
+                                        href="{{url_for('delete_blog',post_id=post.id)}}">delete</a>
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+
+                    <nav class="blog-pagination justify-content-center d-flex">
+                        <ul class="pagination">
+                            {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2)
+                            %}
                             {% if page_num %}
                             {% if page_num == posts.page %}
                             <li class='page-item active'>
@@ -69,19 +77,19 @@
                             <li class='page-item '>
                                 <a href="{{url_for('blog',page=page_num)}}" class='page-link'>{{page_num}}</a>
                             <li>
-                            {% endif %}
-                            {% else %}
-                            ...
-                            {% endif %}
-                            {% endfor %}
-                          </ul>
-                      </nav>
-                  </div>
-              </div>
-              
-          </div>
-      </div>
-  </section>
-  <!--================Blog Area =================-->
-  
+                                {% endif %}
+                                {% else %}
+                                ...
+                                {% endif %}
+                                {% endfor %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--================Blog Area =================-->
+
 {%endblock%}

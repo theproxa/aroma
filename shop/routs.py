@@ -41,7 +41,7 @@ def login():
         user = User.query.filter_by(email=request.form.get('email')).first() 
         if user and user.password == request.form.get('password'):
             login_user( user ) 
-        return redirect(url_for('index'))      
+            return redirect(url_for('index'))      
     return render_template('login.html')
 
 @app.route('/logout', methods=['GET','POST'])
@@ -70,10 +70,19 @@ def register():
         return redirect(url_for('index'))   
     return render_template('register.html' , form=form)
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>',methods=['GET','POST'])
 def single_blog(post_id):  
     post = Post.query.get(post_id)
-    return render_template('single_blog.html', post=post)
+    comments = Comment.query.order_by(Comment.date_posted.desc()).all()
+    if request.method == 'POST':
+        comment = Comment(name=request.form.get('name'), subject=request.form.get('subject'),email=request.form.get('email'),massege=request.form.get('massage'),post_id=post.id)
+        db.session.add(comment)
+        db.session.commit()
+        flash('comment added', 'succes')
+        return redirect(url_for('single_blog',post_id=post.id))
+    return render_template('single_blog.html', post=post ,comments = comments )
+
+
 
 @app.route('/new_post',methods=['GET','POST'])
 @login_required
@@ -87,9 +96,40 @@ def new_post():
             image.save('shop/static/img/blog/'+file_name)
             post = Post(title=form.title.data,author=current_user,image=file_name,content=form.content.data)
             db.session.add(post)
-            db.session.commit()
+            db.session.commit()      
             flash('пост был создан','succes')
             return redirect(url_for('blog'))
     return render_template('new_post.html', form=form)
         
 
+@app.route('/products/<int:product_id>/buy',methods=['GET','POST'])
+def buy(product_id):
+    if request.method == "POST":
+        f= request.form
+        b= Buy(name=f.get('name'),email=f.get('email'),adres=f.get('adres'),product_id=product_id)
+        db.session.add(b)
+        db.session.commit()
+    return render_template('buy.html')
+
+@app.route('/buys',methods=['GET','POST'])
+def buys():
+    buys = Buy.query.all()
+    return render_template('buys.html',buys=buys)
+
+@app.route('/buyDELETE<int:buy_id>',methods=['GET','POST'])
+def delete_buy(buy_id):
+    s = buy_id
+    b = Buy.query.filter_by(id=s).first()
+    db.session.delete(b)
+    db.session.commit()
+    return redirect(url_for('buys'))
+
+
+@app.route('/blogDELETE<int:post_id>',methods=['GET','POST'])
+def delete_blog(post_id):
+    s = post_id
+    b = Post.query.filter_by(id=s).first()
+    print(b)
+    db.session.delete(b)
+    db.session.commit()
+    return redirect(url_for('blog'))
