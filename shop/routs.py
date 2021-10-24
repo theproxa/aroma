@@ -123,13 +123,3 @@ def delete_buy(buy_id):
     db.session.delete(b)
     db.session.commit()
     return redirect(url_for('buys'))
-
-
-@app.route('/blogDELETE<int:post_id>',methods=['GET','POST'])
-def delete_blog(post_id):
-    s = post_id
-    b = Post.query.filter_by(id=s).first()
-    print(b)
-    db.session.delete(b)
-    db.session.commit()
-    return redirect(url_for('blog'))

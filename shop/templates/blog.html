@@ -52,12 +52,6 @@
                                     <p>{{ post.content [:300]}} ...</p>
                                     <a class="button button-blog" href="{{url_for('single_blog',post_id=post.id)}}">View
                                         More</a>
-                                    {% if current_user.isAdmin %}
-
-                                    <a class="button primary-btn"
-                                        href="{{url_for('delete_blog',post_id=post.id)}}">delete</a>
-
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
